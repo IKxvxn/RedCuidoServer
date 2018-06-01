@@ -24,7 +24,7 @@ mongoose.connect("mongodb://RedAdm:RedAdm@cluster0-shard-00-00-6qbpx.mongodb.net
 app.use('/home', homeRoute)
 app.use('/auth', authRoute)
 
-app.listen(port, function() {
+app.listen('port', function() {
   console.log("App is running on port " + app.get('port'));
 });
 
