@@ -17,7 +17,7 @@ app.use(morgan('tiny'))
 app.use(bodyParser.json())
 app.use(fileUpload());
 app.use(zip());
-app.set('port', 8079)
+app.set('port', process.env.PORT|| 8079)
 
 mongoose.connect("mongodb://RedAdm:RedAdm@cluster0-shard-00-00-6qbpx.mongodb.net:27017,cluster0-shard-00-01-6qbpx.mongodb.net:27017,cluster0-shard-00-02-6qbpx.mongodb.net:27017/RedCuido?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true")
 
