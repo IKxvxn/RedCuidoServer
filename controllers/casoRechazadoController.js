@@ -1,5 +1,6 @@
 const casoRechazadoModel = require('../models/casoRechazadoModel')
 const casoEsperaModel = require('../models/casoEsperaModel')
+const fileModel = require('../models/fileModel')
 const auth = require('./authController')
 const mongoose = require('mongoose')
 const usuarioModel = require('../models/usuarioModel')
@@ -7,6 +8,7 @@ const uuidv4 = require('uuid/v4');
 const crypto = require('crypto');
 const path = require('path');
 const Permisos = require('../models/permisos');
+var Archiver = require('archiver');
 
 //funcion que obtiene todos los perfiles de rechazados
 function getCasosRechazados(req, res) {
@@ -102,11 +104,14 @@ function createCasoRechazado(req, res) {
                 }
               })
           }
-          // Se usa mv() method para mover el archivo a la carpeta uploads dentro del servidor.
-          file.mv(`../Servidor/uploads/${filename}`, function (err) {
-            if (err)
-              console.log('File not uploaded!')
-            console.log('File uploaded!')
+          // guarda archivo en mongo
+          var arch = new fileModel;
+          arch.name = filename;
+          arch.data = file.data;
+          arch.mimetype = file.mimetype;
+          arch.save((err, arch)=>{
+            if (err) throw err;
+            console.error('Se ha cargado el archivo.');
           });
 
         });
@@ -249,11 +254,14 @@ function editCasoRechazado(req, res) {
                   }
                 })
             }
-            // Se usa mv() method para mover el archivo a la carpeta uploads dentro del servidor.
-            file.mv(`../Servidor/uploads/${filename}`, function (err) {
-              if (err)
-                console.log('File not uploaded!')
-              console.log('File uploaded!')
+            // guarda archivo en mongo
+            var arch = new fileModel;
+            arch.name = filename;
+            arch.data = file.data;
+            arch.mimetype = file.mimetype;
+            arch.save((err, arch)=>{
+              if (err) throw err;
+              console.error('Se ha cargado el archivo.');
             });
 
           });
@@ -310,12 +318,32 @@ function download(req,res){
         res.status(500)//error
         res.send(`Ocurrió un error 💩 ${err}`)
       }
-      var zipFiles = []
-      //agrego files a la lista con formato path y name
+      // Se le dice al browser que se le enviara un zip.
+      res.writeHead(200, {
+        'Content-Type': 'application/zip',
+        'Content-disposition': 'attachment; filename=adjuntos.zip'
+      });
+
+      var zip = Archiver('zip');
+
+      // Envia como salida la response.
+      zip.pipe(res);
+
+      //agrega files al zip
+      var x = 0;
       for (file of caso[0].files){
-        zipFiles[zipFiles.length] =  { path: `../Servidor/uploads/${file}`, name: `${file}` }
+        fileModel.find({name: file}).exec((err, actualFile) => {
+          if (err) console.error(err);
+          // append a file
+          console.log(actualFile[0].name)
+          zip.append(actualFile[0].data, { name: actualFile[0].name});
+          x++;
+          // si ya se agregaron todos los files
+          if(x==caso[0].files.length){
+            zip.finalize();
+          }     
+        })
       }
-      res.zip({ files: zipFiles, filename: 'adjuntos.zip'}) //envia el zip al cliente
     })
 }
 

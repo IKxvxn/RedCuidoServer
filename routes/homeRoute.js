@@ -8,17 +8,22 @@ const casoExcluidoController = require('../controllers/casoExcluidoController')
 const casoRechazadoController = require('../controllers/casoRechazadoController')
 const notificacionController = require('../controllers/notificacionController')
 const authController = require('../controllers/authController')
+const fileModel = require('../models/fileModel')
 const router = express.Router()
 
 //Funcion general para eliminar archivos del server.
 router.put('/eliminar', function(req,res){
     console.log(req.body.files)
     for(var i=0; i < req.body.files.length; i++){
-        fs.unlink(`../Servidor/uploads/${req.body.files[i]}`, (err) => {
-            if (err){
-                console.log(err)
-            };
-        });
+        casoActivoModel.deleteOne({name: re.body.files[i]}).exec((err, caso) => {
+            if(err){
+                res.status(500)
+                res.send({error:true})//error
+              }
+            else{
+                console.log("Archivo eliminado.")
+            }
+        })
     } 
     res.status(200) 
     res.send({ error: false })

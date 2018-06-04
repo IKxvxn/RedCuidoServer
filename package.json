@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "archiver": "^2.1.1",
     "bcrypt": "^1.0.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
@@ -31,6 +32,6 @@
     "nodemon": "^1.14.12"
   },
   "engines": {
-    "node":"8.9.4"
+    "node": "8.9.4"
   }
 }
