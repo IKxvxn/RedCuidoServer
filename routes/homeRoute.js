@@ -15,7 +15,7 @@ const router = express.Router()
 router.put('/eliminar', function(req,res){
     console.log(req.body.files)
     for(var i=0; i < req.body.files.length; i++){
-        casoActivoModel.deleteOne({name: re.body.files[i]}).exec((err, caso) => {
+        fileModel.deleteOne({name: req.body.files[i]}).exec((err, caso) => {
             if(err){
                 res.status(500)
                 res.send({error:true})//error
