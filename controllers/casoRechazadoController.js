@@ -63,7 +63,7 @@ function createCasoRechazado(req, res) {
     }
     else {
       //Agrega notificacion
-      usuarioModel.updateMany({ "$push": { "notificaciones": notificacion } }).exec()
+      usuarioModel.find().exec((err, usuarios) => {for(var i in usuarios){usuarios[i].notificaciones.push(notificacion);let usuario = new usuarioModel(usuarios[i]);usuario.save()}})
       //Recorre req.files en caso de que se haya subido algo
       var files = [];
       var archivos = [];
@@ -165,7 +165,7 @@ function reactivateCasoRechazado(req, res) {
         }
         else{
           //actualiza notificaciones
-          usuarioModel.updateMany({"$push": { "notificaciones": notificacion } }).exec()
+          usuarioModel.find().exec((err, usuarios) => {for(var i in usuarios){usuarios[i].notificaciones.push(notificacion);let usuario = new usuarioModel(usuarios[i]);usuario.save()}})
         }
       })
       res.status(300)
@@ -260,7 +260,7 @@ function editCasoRechazado(req, res) {
           i++;
         }
         //update de notificaciones
-        usuarioModel.updateMany({ "$push": { "notificaciones": notificacion } }).exec()
+        usuarioModel.find().exec((err, usuarios) => {for(var i in usuarios){usuarios[i].notificaciones.push(notificacion);let usuario = new usuarioModel(usuarios[i]);usuario.save()}})
       }
     })
 }
@@ -294,7 +294,7 @@ function deleteCasoRechazado(req, res) {
         res.send(`Ocurrió un error 💩 ${err}`)//error
       }else{
         //update notificaciones
-        usuarioModel.updateMany({"$push": { "notificaciones": notificacion } }).exec()
+        usuarioModel.find().exec((err, usuarios) => {for(var i in usuarios){usuarios[i].notificaciones.push(notificacion);let usuario = new usuarioModel(usuarios[i]);usuario.save()}})
         res.status(300)
         res.json(caso)//exito
       }

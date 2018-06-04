@@ -63,7 +63,7 @@ function createCasoVisita(req, res) {
     }
     else {
       //Agrega notificacion
-      usuarioModel.updateMany({ "$push": { "notificaciones": notificacion } }).exec()
+      usuarioModel.find().exec((err, usuarios) => {for(var i in usuarios){usuarios[i].notificaciones.push(notificacion);let usuario = new usuarioModel(usuarios[i]);usuario.save()}})
       //Recorre req.files en caso de que se haya subido algo
       var files = [];
       var archivos = [];
@@ -203,7 +203,7 @@ function editCasoVisita(req, res) {
           i++;
         }
         //se agrega notificacion
-        usuarioModel.updateMany({ "$push": { "notificaciones": notificacion } }).exec()
+        usuarioModel.find().exec((err, usuarios) => {for(var i in usuarios){usuarios[i].notificaciones.push(notificacion);let usuario = new usuarioModel(usuarios[i]);usuario.save()}})
       }
     })
 }
@@ -264,7 +264,7 @@ function acceptCasoVisita(req, res) {
         }
         else {
           //agrega notificacion
-          usuarioModel.updateMany({ "$push": { "notificaciones": notificacion } }).exec()
+          usuarioModel.find().exec((err, usuarios) => {for(var i in usuarios){usuarios[i].notificaciones.push(notificacion);let usuario = new usuarioModel(usuarios[i]);usuario.save()}})
         }
       })
       res.status(300)
@@ -325,7 +325,7 @@ function rejectCasoVisita(req, res) {
         }
         else {
           //agrega notificacion
-          usuarioModel.updateMany({ "$push": { "notificaciones": notificacion } }).exec()
+          usuarioModel.find().exec((err, usuarios) => {for(var i in usuarios){usuarios[i].notificaciones.push(notificacion);let usuario = new usuarioModel(usuarios[i]);usuario.save()}})
         }
       })
       res.status(300)
@@ -361,7 +361,7 @@ function deleteCasoVisita(req, res) {
         res.status(500)
         res.send(`Ocurrió un error 💩 ${err}`)
       }else{
-        usuarioModel.updateMany({"$push": { "notificaciones": notificacion } }).exec()
+        usuarioModel.find().exec((err, usuarios) => {for(var i in usuarios){usuarios[i].notificaciones.push(notificacion);let usuario = new usuarioModel(usuarios[i]);usuario.save()}})
         res.status(300)
         res.json(caso)
       }
